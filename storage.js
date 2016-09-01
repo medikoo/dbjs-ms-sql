@@ -46,11 +46,12 @@ MsSqlStorage.prototype = Object.create(Storage.prototype, assign({
 
 	// Any data
 	__getRaw: d(function (cat, ns, path) {
-		var query = 'SELECT * FROM ' + this._tableName_, params = {}, id;
-		if (cat === 'reduced') query += '_Reduced';
+		var query = 'SELECT * FROM [' + this._tableName_, params = {}, id;
+		if (cat === 'reduced') query += '_Reduced]';
+		else if (cat === 'direct') query += ']';
 		if (cat === 'computed') {
 			params.path = ns;
-			query += '_Computed WHERE ((OwnerId = \'' + path + '\') AND  (Path = @path))';
+			query += '_Computed] WHERE ((OwnerId = \'' + path + '\') AND  (Path = @path))';
 			id = path + '/' + ns;
 		} else if (path) {
 			params.path = path;
@@ -70,7 +71,7 @@ MsSqlStorage.prototype = Object.create(Storage.prototype, assign({
 
 	// Direct data
 	__getObject: d(function (ownerId, objectPath, keyPaths) {
-		var query = 'SELECT * FROM ' + this._tableName_ + ' WHERE OwnerId = \'' + ownerId + '\'';
+		var query = 'SELECT * FROM [' + this._tableName_ + '] WHERE OwnerId = \'' + ownerId + '\'';
 		var keyPathQueries = [], params = {};
 		if (keyPaths) {
 			keyPaths.forEach(function (keyPath, index) {
@@ -92,13 +93,13 @@ MsSqlStorage.prototype = Object.create(Storage.prototype, assign({
 		return this._query_(query, params);
 	}),
 	__getAllObjectIds: d(function () {
-		return this._query_('SELECT * FROM ' + this._tableName_ + ' WHERE Path IS NULL');
+		return this._query_('SELECT * FROM [' + this._tableName_ + '] WHERE Path IS NULL');
 	}),
-	__getAll: d(function () { return this._query_('SELECT * FROM ' + this._tableName_); }),
+	__getAll: d(function () { return this._query_('SELECT * FROM [' + this._tableName_ + ']'); }),
 
 	// Reduced data
 	__getReducedObject: d(function (ns, keyPaths) {
-		var query = 'SELECT * FROM ' + this._tableName_ + '_Reduced WHERE OwnerId = \'' + ns + '\'';
+		var query = 'SELECT * FROM [' + this._tableName_ + '_Reduced] WHERE OwnerId = \'' + ns + '\'';
 		var keyPathQueries = [], params = {};
 		if (keyPaths) {
 			keyPaths.forEach(function (keyPath, index) {
@@ -131,9 +132,9 @@ MsSqlStorage.prototype = Object.create(Storage.prototype, assign({
 			  , computedRequest = new sql.Request(connection)
 			  , reducedRequest = new sql.Request(connection);
 			return deferred.map(
-				directRequest.queryPromised('DELETE FROM ' + this._tableName_),
-				computedRequest.queryPromised('DELETE FROM ' + this._tableName_ + '_Computed'),
-				reducedRequest.queryPromised('DELETE FROM ' + this._tableName_ + '_Reduced')
+				directRequest.queryPromised('DELETE FROM [' + this._tableName_ + ']'),
+				computedRequest.queryPromised('DELETE FROM [' + this._tableName_ + '_Computed]'),
+				reducedRequest.queryPromised('DELETE FROM [' + this._tableName_ + '_Reduced]')
 			);
 		}.bind(this));
 	}),
@@ -143,9 +144,9 @@ MsSqlStorage.prototype = Object.create(Storage.prototype, assign({
 			  , computedRequest = new sql.Request(connection)
 			  , reducedRequest = new sql.Request(connection);
 			return deferred.map(
-				directRequest.queryPromised('DROP TABLE ' + this._tableName_),
-				computedRequest.queryPromised('DROP TABLE ' + this._tableName_ + '_Computed'),
-				reducedRequest.queryPromised('DROP TABLE ' + this._tableName_ + '_Reduced')
+				directRequest.queryPromised('DROP TABLE [' + this._tableName_ + ']'),
+				computedRequest.queryPromised('DROP TABLE [' + this._tableName_ + '_Computed]'),
+				reducedRequest.queryPromised('DROP TABLE [' + this._tableName_ + '_Reduced]')
 			);
 		}.bind(this));
 	}),
@@ -157,7 +158,7 @@ MsSqlStorage.prototype = Object.create(Storage.prototype, assign({
 		return this.connection(function (connection) {
 			var def = deferred()
 			  , request = new sql.Request(connection)
-			  , query = 'SELECT * FROM ' + this._tableName_;
+			  , query = 'SELECT * FROM [' + this._tableName_ + ']';
 			request.stream = true;
 			if (keyPath !== undefined) {
 				query += ' WHERE ';
@@ -190,7 +191,7 @@ MsSqlStorage.prototype = Object.create(Storage.prototype, assign({
 		return this.connection(function (connection) {
 			var def = deferred()
 			  , request = new sql.Request(connection)
-			  , query = 'SELECT * FROM ' + this._tableName_ + '_Computed';
+			  , query = 'SELECT * FROM [' + this._tableName_ + '_Computed]';
 			request.stream = true;
 			if (keyPath) {
 				request.input('path', sql.NText, keyPath);
@@ -231,9 +232,10 @@ MsSqlStorage.prototype = Object.create(Storage.prototype, assign({
 	}),
 	_exportTable_: d(function (kind, destStorage) {
 		var promise = this.connection(function (connection) {
-			var query = 'SELECT * FROM ' + this._tableName_;
-			if (kind === 'computed') query += '_Computed';
-			else if (kind === 'reduced') query += '_Reduced';
+			var query = 'SELECT * FROM [' + this._tableName_;
+			if (kind === 'computed') query += '_Computed]';
+			else if (kind === 'reduced') query += '_Reduced]';
+			else query += ']';
 			var def = deferred(), count = 0, promises = [];
 			var request = new sql.Request(connection);
 			request.stream = true;

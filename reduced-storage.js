@@ -29,7 +29,7 @@ MsSqlReducedStorage.prototype = Object.create(ReducedStorage.prototype, assign({
 
 	// Any data
 	__get: d(function (ns, path) {
-		var query = 'SELECT * FROM _Reduced', params = {}, id;
+		var query = 'SELECT * FROM [_Reduced]', params = {}, id;
 		params.path = path;
 		query += ' WHERE ((OwnerId = \'' + ns + '\') AND ';
 		if (path) {
@@ -44,7 +44,7 @@ MsSqlReducedStorage.prototype = Object.create(ReducedStorage.prototype, assign({
 	}),
 	__store: d(function (ns, path, data) { return this._store_(ns, path, data); }),
 	__getObject: d(function (ownerId, keyPaths) {
-		var query = 'SELECT * FROM _Reduced WHERE OwnerId = \'' + ownerId + '\'';
+		var query = 'SELECT * FROM [_Reduced] WHERE OwnerId = \'' + ownerId + '\'';
 		var keyPathQueries = [], params = {};
 		if (keyPaths) {
 			keyPaths.forEach(function (keyPath, index) {
@@ -66,13 +66,13 @@ MsSqlReducedStorage.prototype = Object.create(ReducedStorage.prototype, assign({
 	__clear: d(function () {
 		return this.connection(function (connection) {
 			var request = new sql.Request(connection);
-			return request.queryPromised('DELETE FROM _Reduced');
+			return request.queryPromised('DELETE FROM [_Reduced]');
 		}.bind(this));
 	}),
 	__drop: d(function () {
 		return this.connection(function (connection) {
 			var request = new sql.Request(connection);
-			return request.queryPromised('DROP TABLE _Reduced');
+			return request.queryPromised('DROP TABLE [_Reduced]');
 		}.bind(this));
 	}),
 
@@ -99,7 +99,7 @@ MsSqlReducedStorage.prototype = Object.create(ReducedStorage.prototype, assign({
 	}),
 	_exportTable_: d(function (destStorage) {
 		var promise = this.connection(function (connection) {
-			var query = 'SELECT * FROM _Reduced';
+			var query = 'SELECT * FROM [_Reduced]';
 			var def = deferred(), count = 0, promises = [];
 			var request = new sql.Request(connection);
 			request.stream = true;
