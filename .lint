@@ -16,3 +16,6 @@ stupid
 vars
 
 predef+ __dirname, process
+
+./test
+predef+ console
