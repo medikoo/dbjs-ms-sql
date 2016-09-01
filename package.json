@@ -1,0 +1,35 @@
+{
+  "name": "dbjs-ms-sql",
+  "version": "0.0.0",
+  "description": "Microsoft SQL driver for DBJS",
+  "author": "Mariusz Nowak <medyk@medikoo.com> (http://www.medikoo.com/)",
+  "keywords": [
+    "dbjs",
+    "sql",
+    "mssql"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/medikoo/dbjs-ms-sql.git"
+  },
+  "dependencies": {
+    "d": "1",
+    "deferred": "^0.7.5",
+    "dbjs": "git://github.com/medikoo/dbjs.git#b96e1d8f8dc947a085fdaaa1ee45942eee4edd1b",
+    "dbjs-persistence": "0.0.21",
+    "es5-ext": "^0.10.12",
+    "event-emitter": "^0.3.4",
+    "mssql": "^3.3.0"
+  },
+  "devDependencies": {
+    "tad": "^0.2.5",
+    "xlint": "^0.2.2",
+    "xlint-jslint-medikoo": "^0.1.4"
+  },
+  "scripts": {
+    "lint": "node node_modules/xlint/bin/xlint --linter=node_modules/xlint-jslint-medikoo/index.js --no-cache --no-stream",
+    "lint-console": "node node_modules/xlint/bin/xlint --linter=node_modules/xlint-jslint-medikoo/index.js --watch",
+    "test": "node node_modules/tad/bin/tad"
+  },
+  "license": "MIT"
+}
