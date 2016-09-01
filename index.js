@@ -33,9 +33,9 @@ var MsSqlDriver = module.exports = Object.defineProperties(function (data) {
 	connectionData.password = ensureString(data.msSql.password);
 	connectionData.database = ensureString(data.msSql.database);
 	connectionData.server = data.msSql.server ? ensureString(data.msSql.server) : 'localhost';
-	Driver.call(this, data);
 	var connection = (new sql.Connection(connectionData));
 	this.connection = connection.connectPromised()(connection).aside(null, this.emitError);
+	Driver.call(this, data);
 }, {
 	storageClass: d(Storage),
 	reducedStorageClass: d(ReducedStorage)
