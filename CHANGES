@@ -1,2 +1,6 @@
+v0.1.1  --  2016.09.02
+* Fix param names resolution in getObject calls
+* Allow connections with no password (before password setting was required)
+
 v0.1.0  --  2016.09.01
 * Initial

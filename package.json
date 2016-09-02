@@ -1,6 +1,6 @@
 {
   "name": "dbjs-ms-sql",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Microsoft SQL driver for DBJS",
   "author": "Mariusz Nowak <medyk@medikoo.com> (http://www.medikoo.com/)",
   "keywords": [
@@ -22,7 +22,7 @@
     "mssql": "^3.3.0"
   },
   "devDependencies": {
-    "tad": "^0.2.5",
+    "tad": "^0.2.6",
     "xlint": "^0.2.2",
     "xlint-jslint-medikoo": "^0.1.4"
   },
