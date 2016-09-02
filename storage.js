@@ -72,9 +72,10 @@ MsSqlStorage.prototype = Object.create(Storage.prototype, assign({
 	// Direct data
 	__getObject: d(function (ownerId, objectPath, keyPaths) {
 		var query = 'SELECT * FROM [' + this._tableName_ + '] WHERE OwnerId = \'' + ownerId + '\'';
-		var keyPathQueries = [], params = {};
+		var keyPathQueries = [], params = {}, index = 0;
 		if (keyPaths) {
-			keyPaths.forEach(function (keyPath, index) {
+			keyPaths.forEach(function (keyPath) {
+				++index;
 				var path = 'path' + index, pathLike = 'pathLike' + index;
 				if (objectPath) keyPath = objectPath + '/' + keyPath;
 				params[path] = keyPath;
@@ -100,9 +101,10 @@ MsSqlStorage.prototype = Object.create(Storage.prototype, assign({
 	// Reduced data
 	__getReducedObject: d(function (ns, keyPaths) {
 		var query = 'SELECT * FROM [' + this._tableName_ + '_Reduced] WHERE OwnerId = \'' + ns + '\'';
-		var keyPathQueries = [], params = {};
+		var keyPathQueries = [], params = {}, index = 0;
 		if (keyPaths) {
-			keyPaths.forEach(function (keyPath, index) {
+			keyPaths.forEach(function (keyPath) {
+				++index;
 				var path = 'path' + index, pathLike = 'pathLike' + index;
 				params[path] = keyPath;
 				params[pathLike] = keyPath + '*%';

@@ -45,9 +45,10 @@ MsSqlReducedStorage.prototype = Object.create(ReducedStorage.prototype, assign({
 	__store: d(function (ns, path, data) { return this._store_(ns, path, data); }),
 	__getObject: d(function (ownerId, keyPaths) {
 		var query = 'SELECT * FROM [_Reduced] WHERE OwnerId = \'' + ownerId + '\'';
-		var keyPathQueries = [], params = {};
+		var keyPathQueries = [], params = {}, index = 0;
 		if (keyPaths) {
-			keyPaths.forEach(function (keyPath, index) {
+			keyPaths.forEach(function (keyPath) {
+				++index;
 				var path = 'path' + index, pathLike = 'pathLike' + index;
 				params[path] = keyPath;
 				params[pathLike] = keyPath + '*%';
