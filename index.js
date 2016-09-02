@@ -30,7 +30,7 @@ var MsSqlDriver = module.exports = Object.defineProperties(function (data) {
 	ensureObject(data.msSql);
 	connectionData = {};
 	connectionData.user = ensureString(data.msSql.user);
-	connectionData.password = ensureString(data.msSql.password);
+	if (data.msSql.password) connectionData.password = ensureString(data.msSql.password);
 	connectionData.database = ensureString(data.msSql.database);
 	connectionData.server = data.msSql.server ? ensureString(data.msSql.server) : 'localhost';
 	var connection = (new sql.Connection(connectionData));
